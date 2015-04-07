@@ -3,166 +3,120 @@ title: API Reference
 
 language_tabs:
   - shell
-  - ruby
-  - python
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a>
+  - <a href='https://punchh.com'>Documentation Powered by Punchh Inc.</a>
 
 includes:
-  - errors
+  - create_a_checkin
+  - fetch_user_balance
+  - birthday_reward_with_checkin
+  - check_redemptions_possibility
+  - create_a_redemption
 
 search: true
 ---
 
-# Introduction
+# Overview
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Punchh Server has implemented a new set of APIs which are more streamlined for client access.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+Each API is designed to respond with JSON.
 
-This example API documentation page was created with [Slate](http://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Base URI for production: [`https://punchh.com/api/v5`](https://punchh.com/api/v5)
+and for integration: [`https://intg.punchh.com/api/v5`](https://intg.punchh.com/api/v5)
 
-# Authentication
 
-> To authorize, use this code:
+Location key token must be provided as credentials in each API call in header like 'Authorization: Token token="xxxxxx"'. If this header is not provided, then we can not determine location of particular request. So, it's mandatory to provide location key token in every API request.
 
-```ruby
-require 'kittn'
+phone or email must be provided as a parameter in each API call. If this parameter is not provided, then we can not determine user. So, for identification of user,  phone or email must be provided.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
+`curl https://punchh.com/api/v5/RESOURCE -X METHOD -d 'key=value&key1=value1'`
 
-```python
-import kittn
+<ul>
+  <li>
+    <p>
+      <strong>CheckinsController</strong> deals with listing checkin balance of a user, creating a checkin
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th align="left"></th>
+          <th align="left"><strong>Description</strong></th>
+          <th align="left"><strong>VERB</strong></th>
+          <th align="left"><strong>URL</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td align="left">1.</td>
+          <td align="left"><a href="#create-a-checkin" class="internal present">Create a checkin from POS</a></td>
+          <td align="left"><code>POST</code></td>
+          <td align="left"><code>https://punchh.com/api/v5/checkins</code></td>
+        </tr>
+        <tr>
+          <td align="left">2.</td>
+          <td align="left"><a href="#fetch-user-balance" class="internal present">Fetch checkin balance information</a></td>
+          <td align="left"><code>GET</code></td>
+          <td align="left"><code>https://punchh.com/api/v5/checkins/balance</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>
+      <strong>RedemptionsController</strong> deals with creating a redemption for a user points
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th align="left"></th>
+          <th align="left"><strong>Description</strong></th>
+          <th align="left"><strong>VERB</strong></th>
+          <th align="left"><strong>URL</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td align="left">3.</td>
+          <td align="left"><a href="#create-a-redemptions" class="internal present">Create a Redemptions</a></td>
+          <td align="left"><code>POST</code></td>
+          <td align="left"><code>https://punchh.com/api/v5/redemptions</code></td>
+        </tr>
+        <tr>
+          <td align="left">4.</td>
+          <td align="left"><a href="#check-redemptions-possible-or-not" class="internal present">Check Redemptions possible or not</a></td>
+          <td align="left"><code>GET</code></td>
+          <td align="left"><code>https://punchh.com/api/v5/redemptions/possible</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>
+      <strong>RedemptionCodesController</strong> deals with redeem rewards for a user
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th align="left"></th>
+          <th align="left"><strong>Description</strong></th>
+          <th align="left"><strong>VERB</strong></th>
+          <th align="left"><strong>URL</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td align="left">3.</td>
+          <td align="left"><a href="#redeem-rewards-of-the-user" class="internal present"> Redeem rewards of a user</a></td>
+          <td align="left"><code>PUT</code></td>
+          <td align="left"><code>https://punchh.com/api/v5/redemption_codes/birthday</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
 
-api = kittn.authorize('meowmeowmeow')
-```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
 
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace `meowmeowmeow` with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Isis",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/3"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Isis",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">If you're not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the cat to retrieve
 
